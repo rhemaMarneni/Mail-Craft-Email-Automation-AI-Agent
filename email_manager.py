@@ -3,11 +3,12 @@ from agents import Runner, trace, OpenAIChatCompletionsModel, InputGuardrailTrip
 from email_agents.html_converter import html_converter_agent
 from email_agents.email_sender import email_sender_agent
 from email_agents.email_generator import email_generator_agent
+from guardrails.input_validator import get_reason_from_tripwire
 
 import os
 import gradio as gr
 
-from consts import GEMINI_BASE_URL, ANTHROPIC_BASE_URL, NO_SUBJECT_LINE, NO_EMAIL_BODY
+from consts import GEMINI_BASE_URL, ANTHROPIC_BASE_URL, NO_SUBJECT_LINE, NO_EMAIL_BODY, ERROR_MESSAGE
 from utils import get_file_path, pdf_to_text_converter
 
 class EmailManager:
@@ -54,25 +55,26 @@ class EmailManager:
                     "message": "Email generated successfully! Be sure to make any necessary changes before previewing and sending!"
                 }
             except InputGuardrailTripwireTriggered as e:
+                reason = get_reason_from_tripwire(e) or ERROR_MESSAGE
                 return {
                     "email_subject_line": NO_SUBJECT_LINE,
                     "email_body": NO_EMAIL_BODY,
                     "success": False,
-                    "message": f"Input rejected: {e.guardrail_output.output_info['reason']}"
+                    "message": f"Input rejected: {reason}"
                 }
 
     async def run_html_converter(self, subject_line: str, email_body: str):
         message = f"Convert the given input subject line and email body to an HTML email body for the user to preview before sending. \
             Subject Line: {subject_line if subject_line else ''} \
             Email Body: {email_body if email_body else ''} "
-        with trace("sHTML Converter"):
+        with trace("HTML Converter"):
             result = await Runner.run(html_converter_agent, message)
         print("HTML Output:", result.final_output)
         self.html_output = result.final_output
         return result.final_output
 
     async def run_email_sender(self, to_email_addresses: list[str], should_attach_pdf: bool):
-        print("Writing email...")
+        print("Sending email...")
         self.final_email_list = to_email_addresses
         self.should_attach_pdf = should_attach_pdf
 
@@ -85,6 +87,7 @@ class EmailManager:
 
         result = await Runner.run(email_sender_agent, message)
         print(result.final_output)
-        if result.final_output.status == 'success':
-            print("Email sent")
-        return result.final_output
+        return {
+            "status": result.final_output.status,
+            "message": result.final_output.message
+        }

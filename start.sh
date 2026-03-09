@@ -11,4 +11,5 @@ fi
 # Sync dependencies (creates venv and installs from pyproject.toml if needed)
 uv sync
 
+# run the project
 uv run python mail_craft.py

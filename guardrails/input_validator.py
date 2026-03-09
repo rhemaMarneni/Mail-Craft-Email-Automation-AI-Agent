@@ -1,5 +1,17 @@
 from agents import Agent, input_guardrail, GuardrailFunctionOutput, Runner
+from agents.exceptions import InputGuardrailTripwireTriggered
 from output_structures import InputValidationOutput
+
+
+def get_reason_from_tripwire(e: InputGuardrailTripwireTriggered) -> str | None:
+    """Extract the reason from the guardrail result stored in the exception (our GuardrailFunctionOutput)."""
+    result = getattr(e, "result", None) or (e.args[0] if e.args else None)
+    if result is None:
+        return None
+    info = getattr(result, "output_info", None)
+    if isinstance(info, dict):
+        return info.get("reason")
+    return getattr(info, "reason", None)
 
 input_validator_instructions = """You are to validate the input of the email generator agent.
         The input is a string message with an input query and tone. THe user may include a pdf upload,
