@@ -48,6 +48,8 @@ Run the following command in your terminal to execute the project:
 ```
 ./start.sh
 ```
+**If you want to see what's behind the curtain…** <br>
+You can look at your pipeline and agent responses at https://platform.openai.com/logs?api=traces<br><br>
 **If you want to add new dependencies…** <br>
 Like importing a new library, do this (similar to `npm install package_name`)
 
