@@ -13,7 +13,7 @@ Do you want to send meeting minutes to your attendees/colleagues without the has
 - **Python** for programming
 - **Gradio** for UI
 - **OpenAI Agents SDK** for defining AI Agents<br>
-(I used the gpt-4o-mini model across my agents, since none of my agents require heavy reasoning. It's a pretty lightweight model.)<br>
+(I used the gpt-4o-mini model across my agents, since none of my agents require heavy reasoning. It's cheap and a pretty lightweight model.)<br>
 - **Pydantic** – Used for structured outputs and data validation between agents  
 - **Code Editor / IDE** – VSCode or Cursor recommended for running and editing the project <br>
 (Terminal / CLI Access – Required to install dependencies and run the project)
@@ -23,7 +23,7 @@ Do you want to send meeting minutes to your attendees/colleagues without the has
 ## Estimated Cost
 
 MailGun → I used the free tier of 100 emails/day. Upgrade as needed.<br>
-OpenAI → as per usage, I spent <$1.
+OpenAI → as per usage and selection of models, my overall spend was <$1.
 
 ## Before you run your project...
 1. Create an account on https://platform.openai.com/ and add in your credit card details for billing.
@@ -55,17 +55,23 @@ Like importing a new library, do this (similar to `npm install package_name`)
 
 ```bash
 uv add package_name # ex: uv add pypdf
-uv sync
 ```
 Then run your project as shown above.
 
 ## Future Work
 
+- Testing responses with different kinds of LLM models
+- Testing Agentic workflows as [suggested by Anthropic](https://www.anthropic.com/engineering/building-effective-agents#building-blocks-workflows-and-agents)
 - CRUD operations on email list to add and remove specific emails
 - Add bcc option to hide other recipients
+- Allow images as attachments than just PDF; to send, or take context from
+- Provide each user an account login, to save drafts and previously sent emails 
+
 
 ## Extra Info
 
 I own a custom domain and verified it with Mailgun by configuring the required DNS records on my domain. This is supposed to ensure that the emails are properly authenticated and prevent them from being flagged as spam. (Sometimes my MailGun emails still get marked as spam, I'm open to suggestions as to how to totally avoid it from happening).
+
+## End Credits
 
 My tool is free to use and I welcome any improvements and criticism! Since this involves the use of AI agents (with multiple LLM calls) I would ask you to replace the API keys with your own to test it out on your own. All the instructions have been outlined. If you are not familiar with git or setting up projects on your computer, or you just want to skip the hassle because you can, I’m happy to connect and go over the app myself!
