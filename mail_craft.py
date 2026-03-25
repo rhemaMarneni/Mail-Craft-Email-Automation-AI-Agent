@@ -19,7 +19,7 @@ async def set_should_attach_pdf(should_attach_pdf_value: bool):
 
 
 async def generate_email(query: str, tone: str, pdf_upload: gr.File, subject_line: str, email_body: str):
-    if not query or not subject_line or not email_body:
+    if not query:
         gr.Error("Please fill input an input field to provide context", duration=10)
         yield ERROR_MESSAGE, ERROR_MESSAGE, gr.update(interactive=False)
     email_output = await email_manager.run_email_generator(query, tone, pdf_upload, subject_line, email_body)
@@ -113,7 +113,7 @@ APP_CSS = """
 
 with gr.Blocks(theme=theme, css=APP_CSS) as ui:
     email_section_invisible = gr.State(True)
-    gr.Markdown("# Mail Craft: Email Automation AI Agent")
+    gr.Markdown("# Mail Craft: Email Automation System")
     gr.Markdown("## Craft Your Email with AI")
     gr.Markdown("### You can also paste a rough draft of your email in the input fields on the right and click 'Generate Email' to get started!")
     with gr.Row():
